@@ -23,6 +23,6 @@ module.exports = (mongoose) => {
             return object
     })
     
-    const Paket = mongoose.model("Data Paket", schema)
+    const Paket = mongoose.model("Paket", schema)
     return Paket
 }

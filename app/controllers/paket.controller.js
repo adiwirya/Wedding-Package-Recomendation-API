@@ -106,8 +106,6 @@ exports.recomendation = (req, res) => {
         venue: req.body.venue,
         jumlahTamu: req.body.jumlahTamu,
         totalHarga: req.body.totalHarga,
-        image: req.body.image,
-        detailPaket : req.body.detailPaket,
     }) 
 
     Paket.find()
@@ -115,8 +113,10 @@ exports.recomendation = (req, res) => {
             const paket = result
             const MaxMin = getMinMax(paket)
             const normalisasiNilai = _.map(paket, nilai => normalisasi(nilai, MaxMin));
-            const hitungBobotPeringkat = _.map(normalisasiNilai, nilai => hitungPeringkat(nilai,criteria));
-            res.send(_.orderBy(hitungBobotPeringkat,['total'],['desc']))
+            const hitungBobotPeringkat = _.map(normalisasiNilai, nilai => hitungPeringkat(nilai, criteria));
+            const Rank = _.orderBy(hitungBobotPeringkat,['total'],['desc'])
+            res.send(_.slice(Rank,0,3))
+            // res.send(normalisasiNilai)
         }).catch((err) => {
             res.status(500).send({
             message : err.message || "Some Error While Finding Data"
@@ -125,7 +125,6 @@ exports.recomendation = (req, res) => {
 }
 
 function getMinMax(value) {
-
     const dekorasi = _.min(value, 'dekorasi')
     const makeup = _.min(value, 'makeup')
     const katering = _.min(value, 'katering')
@@ -149,13 +148,13 @@ function getMinMax(value) {
 
 function normalisasi(matrix, maxmin) {
   matrix.dekorasi = maxmin.dekorasi / matrix.dekorasi;
-  matrix.makeup = matrix.makeup / maxmin.makeup;
-  matrix.katering = matrix.katering / maxmin.katering;
-  matrix.dokumentasi = matrix.dokumentasi / maxmin.dokumentasi;
-  matrix.entertaiment = matrix.entertaiment /maxmin.entertaiment;
-  matrix.venue = matrix.venue /maxmin.venue;
+  matrix.makeup = maxmin.makeup / matrix.makeup;
+  matrix.katering = maxmin.katering / matrix.katering;
+  matrix.dokumentasi = maxmin.dokumentasi / matrix.dokumentasi;
+  matrix.entertaiment = maxmin.entertaiment /matrix.entertaiment;
+  matrix.venue = maxmin.venue /matrix.venue;
   matrix.jumlahTamu = matrix.jumlahTamu /maxmin.jumlahTamu;
-  matrix.totalHarga = matrix.totalHarga /maxmin.totalHarga;
+  matrix.totalHarga = maxmin.totalHarga /matrix.totalHarga;
 
   return matrix;
 }
@@ -170,9 +169,11 @@ function hitungPeringkat(nilai, criteria) {
         (nilai.venue * criteria.venue);
         (nilai.jumlahTamu * criteria.jumlahTamu);
         (nilai.total * criteria.total);
-  const result = {
-  nama: nilai.namaPaket,
-      total: total
-  }
+    const result = {
+        id: nilai.id,
+        nama: nilai.namaPaket,
+        image: nilai.image,
+        total: total,
+    }
   return result;
 }
