@@ -42,6 +42,11 @@ exports.findOne = (req, res) => {
 
     Paket.findById(id)
         .then((result) => {
+            if (!result) {
+                res.status(404).send({
+                    message: "Data Not Found"
+                })
+            }
             res.send(result)
         }).catch((err) => {
             res.status(409).send({
@@ -167,7 +172,7 @@ function hitungPeringkat(nilai, criteria) {
         (nilai.total * criteria.total);
   const result = {
   nama: nilai.namaPaket,
-    total: total
+      total: total
   }
   return result;
 }
