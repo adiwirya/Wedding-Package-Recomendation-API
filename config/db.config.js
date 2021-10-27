@@ -1,3 +1,5 @@
+// .env confic //
+require('dotenv').config();
 module.exports = {
-    url: "mongodb://localhost:27017/SPK_SAW"
+    url: process.env.DB_CONNECTION
 }

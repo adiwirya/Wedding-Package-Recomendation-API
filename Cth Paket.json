@@ -1,11 +1,13 @@
 {
-    "namaPaket": "Paket D",
-    "dekorasi": 10000000,
-    "makeup": 7500000,
-    "katering": 20000000,
-    "dokumentasi": 6000000,
-    "entertaiment": 4000000,
-    "venue": 40000000,
-    "jumlahTamu": 250,
-    "totalHarga": 87500000
+    "namaPaket": "Paket A",
+    "dekorasi": 10000000, C
+    "makeup": 7500000, C 
+    "katering": 20000000, C
+    "dokumentasi": 6000000, C
+    "entertaiment": 4000000, C
+    "venue": 40000000, C Outdoor 1 indoor 5
+    ""
+    "jumlahTamu": 250, "B"
+    "totalHarga": 87500000 C
 }
+

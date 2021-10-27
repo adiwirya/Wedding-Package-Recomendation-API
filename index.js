@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 require('./app/routes/post.routes')(app)
 require('./app/routes/paket.routes')(app)
 
-const PORT = 5000
-app.listen(PORT, () => {
-    console.log('Server is running on http://localhost:'+ PORT)
+
+app.listen(process.env.PORT, () => {
+    console.log('Server is running on http://localhost:'+ process.env.PORT)
 })

@@ -1,6 +1,7 @@
 const db = require('../models/index')
 const _ = require('lodash');
 const Paket = db.paket
+const Criteria = db.criteria
 
 exports.findAll = (req, res) => {
     Paket.find()
@@ -91,13 +92,24 @@ exports.delete = (req, res) => {
 }
 
 exports.recomendation = (req, res) => {
+    const criteria = new Criteria({
+        dekorasi: req.body.dekorasi,
+        makeup: req.body.makeup,
+        katering: req.body.katering,
+        dokumentasi: req.body.dokumentasi,
+        entertaiment: req.body.entertaiment,
+        venue: req.body.venue,
+        jumlahTamu: req.body.jumlahTamu,
+        totalHarga: req.body.totalHarga,
+    }) 
+
     Paket.find()
         .then((result) => {
             const paket = result
             const MaxMin = getMinMax(paket)
             const normalisasiNilai = _.map(paket, nilai => normalisasi(nilai, MaxMin));
-            const hitungBobotPeringkat = _.map(normalisasiNilai, nilai => hitungPeringkat(nilai));
-            res.send(hitungBobotPeringkat)
+            const hitungBobotPeringkat = _.map(normalisasiNilai, nilai => hitungPeringkat(nilai,criteria));
+            res.send(_.orderBy(hitungBobotPeringkat,['total'],['desc']))
         }).catch((err) => {
             res.status(500).send({
             message : err.message || "Some Error While Finding Data"
@@ -141,16 +153,16 @@ function normalisasi(matrix, maxmin) {
   return matrix;
 }
 
-function hitungPeringkat(nilai) {
+function hitungPeringkat(nilai, criteria) {
     const total =
-        (nilai.dekorasi * 3) +
-        (nilai.makeup * 5) +
-        (nilai.katering * 5) +
-        (nilai.dokumentasi * 5) +
-        (nilai.entertaiment * 3);
-        (nilai.venue * 5);
-        (nilai.jumlahTamu * 5);
-        (nilai.total * 1);
+        (nilai.dekorasi * criteria.dekorasi) +
+        (nilai.makeup * criteria.makeup) +
+        (nilai.katering * criteria.katering) +
+        (nilai.dokumentasi * criteria.dokumentasi) +
+        (nilai.entertaiment * criteria.entertaiment);
+        (nilai.venue * criteria.venue);
+        (nilai.jumlahTamu * criteria.jumlahTamu);
+        (nilai.total * criteria.total);
   const result = {
   nama: nilai.namaPaket,
     total: total
