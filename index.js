@@ -28,7 +28,6 @@ app.get('/', (req, res) => {
     })
 })
 
-require('./app/routes/post.routes')(app)
 require('./app/routes/paket.routes')(app)
 
 

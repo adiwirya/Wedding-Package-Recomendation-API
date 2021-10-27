@@ -6,7 +6,6 @@ mongoose.Promise = global.Promise
 const db = {}
 db.mongoose = mongoose
 db.url = dbConfig.url
-db.posts = require('./post.model')(mongoose)
 db.paket = require('./paket.model')(mongoose)
 db.criteria = require('./criteria.model')(mongoose)
 
