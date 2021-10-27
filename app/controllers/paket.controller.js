@@ -101,6 +101,8 @@ exports.recomendation = (req, res) => {
         venue: req.body.venue,
         jumlahTamu: req.body.jumlahTamu,
         totalHarga: req.body.totalHarga,
+        image: req.body.image,
+        detailPaket : req.body.detailPaket,
     }) 
 
     Paket.find()
