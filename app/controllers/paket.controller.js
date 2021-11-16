@@ -116,7 +116,8 @@ exports.recomendation = (req, res) => {
             const hitungBobotPeringkat = _.map(normalisasiNilai, nilai => hitungPeringkat(nilai, criteria));
             const Rank = _.orderBy(hitungBobotPeringkat,['total'],['desc'])
             res.send(_.slice(Rank,0,3))
-            // res.send(normalisasiNilai)
+            // console.log(MaxMin);
+            // res.send(hitungBobotPeringkat)
         }).catch((err) => {
             res.status(500).send({
             message : err.message || "Some Error While Finding Data"
@@ -125,37 +126,52 @@ exports.recomendation = (req, res) => {
 }
 
 function getMinMax(value) {
-    const dekorasi = _.min(value, 'dekorasi')
-    const makeup = _.min(value, 'makeup')
-    const katering = _.min(value, 'katering')
-    const dokumentasi = _.min(value, 'dokumentasi')
-    const entertaiment = _.min(value, 'entertaiment')
-    const venue = _.min(value, 'venue')
-    const jumlahTamu = _.max(value, 'jumlahTamu')
-    const totalHarga = _.min(value, 'totalHarga')
+    const dekorasiMin = _.minBy(value, 'dekorasi')
+    const makeupMin = _.minBy(value, 'makeup')
+    const kateringMin = _.minBy(value, 'katering')
+    const dokumentasiMin = _.minBy(value, 'dokumentasi')
+    const entertaimentMin = _.minBy(value, 'entertaiment')
+    const venueMin = _.minBy(value, 'venue')
+    const jumlahTamuMax = _.maxBy(value, 'jumlahTamu')
+    const totalHargaMin = _.minBy(value, 'totalHarga')
 
   return {
-        dekorasi: dekorasi.dekorasi,
-        makeup: makeup.makeup,
-        katering: katering.katering,
-        dokumentasi: dokumentasi.dokumentasi,
-        entertaiment: entertaiment.entertaiment,
-        venue: venue.venue,
-        jumlahTamu: jumlahTamu.jumlahTamu,
-        totalHarga: totalHarga.totalHarga,
+        dekorasi: dekorasiMin.dekorasi,
+        makeup: makeupMin.makeup,
+        katering: kateringMin.katering,
+        dokumentasi: dokumentasiMin.dokumentasi,
+        entertaiment: entertaimentMin.entertaiment,
+        venue: venueMin.venue,
+        jumlahTamu: jumlahTamuMax.jumlahTamu,
+        totalHarga: totalHargaMin.totalHarga,
   }
 }
 
 function normalisasi(matrix, maxmin) {
-  matrix.dekorasi = maxmin.dekorasi / matrix.dekorasi;
-  matrix.makeup = maxmin.makeup / matrix.makeup;
-  matrix.katering = maxmin.katering / matrix.katering;
-  matrix.dokumentasi = maxmin.dokumentasi / matrix.dokumentasi;
-  matrix.entertaiment = maxmin.entertaiment /matrix.entertaiment;
-  matrix.venue = maxmin.venue /matrix.venue;
-  matrix.jumlahTamu = matrix.jumlahTamu /maxmin.jumlahTamu;
-  matrix.totalHarga = maxmin.totalHarga /matrix.totalHarga;
+    if (matrix.dokumentasi != '0')
+    { matrix.dokumentasi = maxmin.dokumentasi / matrix.dokumentasi; }
+    
+    if (matrix.entertaiment != '0')
+    { matrix.entertaiment = maxmin.entertaiment / matrix.entertaiment; }
 
+    if (matrix.dekorasi != '0')
+    { matrix.dekorasi = maxmin.dekorasi / matrix.dekorasi; }
+
+    if (matrix.makeup != '0')
+    { matrix.makeup = maxmin.makeup / matrix.makeup; }
+    
+    if (matrix.katering != '0')
+    { matrix.katering = maxmin.katering / matrix.katering; }
+    
+    if (matrix.venue != '0')
+    { matrix.venue = maxmin.venue / matrix.venue; }
+    
+    if (matrix.jumlahTamu != '0')
+    { matrix.jumlahTamu = matrix.jumlahTamu / maxmin.jumlahTamu; }
+    
+    if (matrix.totalHarga != '0')
+    { matrix.totalHarga = maxmin.totalHarga / matrix.totalHarga; }
+    
   return matrix;
 }
 
@@ -165,10 +181,10 @@ function hitungPeringkat(nilai, criteria) {
         (nilai.makeup * criteria.makeup) +
         (nilai.katering * criteria.katering) +
         (nilai.dokumentasi * criteria.dokumentasi) +
-        (nilai.entertaiment * criteria.entertaiment);
-        (nilai.venue * criteria.venue);
-        (nilai.jumlahTamu * criteria.jumlahTamu);
-        (nilai.total * criteria.total);
+        (nilai.entertaiment * criteria.entertaiment) +
+        (nilai.venue * criteria.venue) +
+        (nilai.jumlahTamu * criteria.jumlahTamu)+
+        (nilai.totalHarga * criteria.totalHarga);
     const result = {
         id: nilai.id,
         nama: nilai.namaPaket,
