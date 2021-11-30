@@ -11,7 +11,7 @@ module.exports = (mongoose) => {
             jumlahTamu: Number,
             totalHarga: Number,
             image: String,
-            detailPaket : String
+            detailPaket: String,
         },
 
         { timestamps : true}
