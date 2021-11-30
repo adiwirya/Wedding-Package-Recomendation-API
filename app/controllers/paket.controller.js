@@ -3,6 +3,7 @@ const _ = require('lodash');
 const Paket = db.paket
 const Criteria = db.criteria
 
+
 exports.findAll = (req, res) => {
     Paket.find()
         .then((result) => {
@@ -25,6 +26,7 @@ exports.create = (req, res) => {
         venue: req.body.venue,
         jumlahTamu: req.body.jumlahTamu,
         totalHarga: req.body.totalHarga,
+        image: req.file.path,
     })
 
     paket.save(paket)
