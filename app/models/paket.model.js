@@ -1,28 +1,43 @@
 module.exports = (mongoose) => {
-    const schema = mongoose.Schema(
+    const Paketschema = mongoose.Schema(
         {
-            namaPaket: String,
-            dekorasi: Number,
-            makeup: Number,
-            katering: Number,
-            dokumentasi: Number,
-            venue: Number,
-            entertaiment: Number,
-            jumlahTamu: Number,
-            totalHarga: Number,
+            url : String,
+            nama: String,
+            harga: Number,
+            venuetype: String,
+            lokasi: String,
+            tamu: Number,
             image: String,
-            detailPaket: String,
+            mc: Number,
+            car: Number,
+            photo: Number,
+            video: Number,
+            hour: Number,
+            crew: Number,
+            cake: Number, 
+            singer: Number,
+            ins: Number,
+            mua: Number,
+            catering: Number,
+            stage: Number,
+            gate: Number,
+            table: Number,
+            groom: Number,
+            bride: Number,
+            live: Number,
+            venue: Number,
+            detail: String,
         },
 
         { timestamps : true}
 
     )
-    schema.method("toJSON", function () {
+    Paketschema.method("toJSON", function () {
             const { __v, _id, ... object } = this.toObject()
             object.id = _id
             return object
     })
     
-    const Paket = mongoose.model("Paket", schema)
+    const Paket = mongoose.model("Paket", Paketschema)
     return Paket
 }
