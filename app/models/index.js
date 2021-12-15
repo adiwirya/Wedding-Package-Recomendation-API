@@ -8,5 +8,6 @@ db.mongoose = mongoose
 db.url = dbConfig.url
 db.paket = require('./paket.model')(mongoose)
 db.criteria = require('./criteria.model')(mongoose)
+db.user = require('./user.model')(mongoose)
 
 module.exports = db
