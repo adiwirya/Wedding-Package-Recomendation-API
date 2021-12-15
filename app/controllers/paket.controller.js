@@ -7,36 +7,54 @@ const Criteria = db.criteria
 exports.findAll = (req, res) => {
     Paket.find()
         .then((result) => {
-        res.send(result)
+            res.status(200).send(result)
         }).catch((err) => {
             res.status(500).send({
-            message : err.message || "Some Error While Finding Data"
+                message: err.message || "Some Error While Finding Data"
+            })
         })
-    })
 }
 
 exports.create = (req, res) => {
     const paket = new Paket({
-        namaPaket: req.body.namaPaket,
-        dekorasi: req.body.dekorasi,
-        makeup: req.body.makeup,
-        katering: req.body.katering,
-        dokumentasi: req.body.dokumentasi,
-        entertaiment: req.body.entertaiment,
+        url: req.body.url,
+        nama: req.body.nama,
+        harga: req.body.harga,
+        venuetype: req.body.venuetype,
+        lokasi: req.body.lokasi,
+        tamu: req.body.tamu,
+        image: req.body.image,
+        mc: req.body.mc,
+        car: req.body.car,
+        photo: req.body.photo,
+        video: req.body.video,
+        hour: req.body.hour,
+        crew: req.body.crew,
+        cake: req.body.cake,
+        singer: req.body.singer,
+        ins: req.body.ins,
+        mua: req.body.mua,
+        catering: req.body.catering,
+        stage: req.body.stage,
+        gate: req.body.gate,
+        table: req.body.table,
+        groom: req.body.groom,
+        bride: req.body.bride,
+        live: req.body.live,
         venue: req.body.venue,
-        jumlahTamu: req.body.jumlahTamu,
-        totalHarga: req.body.totalHarga,
-        image: req.file.path,
+        detail: req.body.detailPaket,
     })
 
     paket.save(paket)
         .then((result) => {
-            res.send(result)
+            res.status(200).json({
+                message: "Data was Created"
+            })
         }).catch((err) => {
-            res.status(409).send({
-            message : err.message || "Some Error While Creating Data"
+            res.status(500).json({
+                message: err.message || "Some Error While Creating Data"
+            })
         })
-    })
 }
 
 exports.findOne = (req, res) => {
@@ -45,13 +63,13 @@ exports.findOne = (req, res) => {
     Paket.findById(id)
         .then((result) => {
             if (!result) {
-                res.status(404).send({
+                res.status(404).json({
                     message: "Data Not Found"
                 })
             }
-            res.send(result)
+            res.status(200).send(result)
         }).catch((err) => {
-            res.status(409).send({
+            res.status(409).json({
                 message: err.message || "Some Error While Receiving Data"
             })
         })
@@ -63,18 +81,18 @@ exports.update = (req, res) => {
     Paket.findByIdAndUpdate(id, req.body)
         .then((result) => {
             if (!result) {
-                res.status(404).send({
+                res.status(404).json({
                     message: "Data Not Found"
                 })
             }
-                res.send({
-                    message: "Data Updated",
-              })  
+            res.status(200).json({
+                message: "Data Updated",
+            })
         }).catch((err) => {
-         res.status(409).send({
+            res.status(409).json({
                 message: err.message || "Some Error While Updating Data"
             })
-    }) 
+        })
 }
 
 exports.delete = (req, res) => {
@@ -87,15 +105,14 @@ exports.delete = (req, res) => {
                     message: "Data Not Found"
                 })
             }
-                res.send({
-                    message: "Data was Deleted",
-                    data : result,
-              })  
+            res.status(200).json({
+                message: "Data was Deleted",
+            })
         }).catch((err) => {
-         res.status(409).send({
+            res.status(409).send({
                 message: err.message || "Some Error While Deleting Data"
             })
-    }) 
+        })
 }
 
 exports.recomendation = (req, res) => {
@@ -108,7 +125,7 @@ exports.recomendation = (req, res) => {
         venue: req.body.venue,
         jumlahTamu: req.body.jumlahTamu,
         totalHarga: req.body.totalHarga,
-    }) 
+    })
 
     Paket.find()
         .then((result) => {
@@ -116,15 +133,15 @@ exports.recomendation = (req, res) => {
             const MaxMin = getMinMax(paket)
             const normalisasiNilai = _.map(paket, nilai => normalisasi(nilai, MaxMin));
             const hitungBobotPeringkat = _.map(normalisasiNilai, nilai => hitungPeringkat(nilai, criteria));
-            const Rank = _.orderBy(hitungBobotPeringkat,['total'],['desc'])
-            res.send(_.slice(Rank,0,3))
+            const Rank = _.orderBy(hitungBobotPeringkat, ['total'], ['desc'])
+            res.status(200).send(_.slice(Rank, 0, 3))
             // console.log(MaxMin);
             // res.send(hitungBobotPeringkat)
         }).catch((err) => {
             res.status(500).send({
-            message : err.message || "Some Error While Finding Data"
+                message: err.message || "Some Error While Finding Data"
+            })
         })
-    })
 }
 
 function getMinMax(value) {
@@ -137,7 +154,7 @@ function getMinMax(value) {
     const jumlahTamuMax = _.maxBy(value, 'jumlahTamu')
     const totalHargaMin = _.minBy(value, 'totalHarga')
 
-  return {
+    return {
         dekorasi: dekorasiMin.dekorasi,
         makeup: makeupMin.makeup,
         katering: kateringMin.katering,
@@ -146,35 +163,43 @@ function getMinMax(value) {
         venue: venueMin.venue,
         jumlahTamu: jumlahTamuMax.jumlahTamu,
         totalHarga: totalHargaMin.totalHarga,
-  }
+    }
 }
 
 function normalisasi(matrix, maxmin) {
-    if (matrix.dokumentasi != '0')
-    { matrix.dokumentasi = maxmin.dokumentasi / matrix.dokumentasi; }
-    
-    if (matrix.entertaiment != '0')
-    { matrix.entertaiment = maxmin.entertaiment / matrix.entertaiment; }
+    if (matrix.dokumentasi != '0') {
+        matrix.dokumentasi = maxmin.dokumentasi / matrix.dokumentasi;
+    }
 
-    if (matrix.dekorasi != '0')
-    { matrix.dekorasi = maxmin.dekorasi / matrix.dekorasi; }
+    if (matrix.entertaiment != '0') {
+        matrix.entertaiment = maxmin.entertaiment / matrix.entertaiment;
+    }
 
-    if (matrix.makeup != '0')
-    { matrix.makeup = maxmin.makeup / matrix.makeup; }
-    
-    if (matrix.katering != '0')
-    { matrix.katering = maxmin.katering / matrix.katering; }
-    
-    if (matrix.venue != '0')
-    { matrix.venue = maxmin.venue / matrix.venue; }
-    
-    if (matrix.jumlahTamu != '0')
-    { matrix.jumlahTamu = matrix.jumlahTamu / maxmin.jumlahTamu; }
-    
-    if (matrix.totalHarga != '0')
-    { matrix.totalHarga = maxmin.totalHarga / matrix.totalHarga; }
-    
-  return matrix;
+    if (matrix.dekorasi != '0') {
+        matrix.dekorasi = maxmin.dekorasi / matrix.dekorasi;
+    }
+
+    if (matrix.makeup != '0') {
+        matrix.makeup = maxmin.makeup / matrix.makeup;
+    }
+
+    if (matrix.katering != '0') {
+        matrix.katering = maxmin.katering / matrix.katering;
+    }
+
+    if (matrix.venue != '0') {
+        matrix.venue = maxmin.venue / matrix.venue;
+    }
+
+    if (matrix.jumlahTamu != '0') {
+        matrix.jumlahTamu = matrix.jumlahTamu / maxmin.jumlahTamu;
+    }
+
+    if (matrix.totalHarga != '0') {
+        matrix.totalHarga = maxmin.totalHarga / matrix.totalHarga;
+    }
+
+    return matrix;
 }
 
 function hitungPeringkat(nilai, criteria) {
@@ -185,7 +210,7 @@ function hitungPeringkat(nilai, criteria) {
         (nilai.dokumentasi * criteria.dokumentasi) +
         (nilai.entertaiment * criteria.entertaiment) +
         (nilai.venue * criteria.venue) +
-        (nilai.jumlahTamu * criteria.jumlahTamu)+
+        (nilai.jumlahTamu * criteria.jumlahTamu) +
         (nilai.totalHarga * criteria.totalHarga);
     const result = {
         id: nilai.id,
@@ -193,5 +218,5 @@ function hitungPeringkat(nilai, criteria) {
         image: nilai.image,
         total: total,
     }
-  return result;
+    return result;
 }
