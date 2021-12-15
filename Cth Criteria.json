@@ -1,10 +1,14 @@
 {
     "dekorasi": 5,
-    "makeup": 5,
+    "bridal": 5,
     "katering": 5,
     "dokumentasi": 3,
     "venue": 4,
     "entertaiment": 1,
     "jumlahTamu": 3,
-    "totalHarga": 1
+    "totalHarga": 1,
+    "car": 1,
+    "cake": 1,
+    "crew": 1,
+    "live": 1
 }
