@@ -42,7 +42,7 @@ exports.create = (req, res) => {
         bride: req.body.bride,
         live: req.body.live,
         venue: req.body.venue,
-        detail: req.body.detailPaket,
+        detail: req.body.detail,
     })
     console.log(paket);
     paket.save(paket)
