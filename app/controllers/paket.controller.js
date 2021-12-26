@@ -7,9 +7,9 @@ const Criteria = db.criteria
 exports.findAll = (req, res) => {
     Paket.find()
         .then((result) => {
-            res.status(200).send(result)
+            res.status(200).json(result)
         }).catch((err) => {
-            res.status(500).send({
+            res.status(500).json({
                 message: err.message || "Some Error While Finding Data"
             })
         })
@@ -67,7 +67,7 @@ exports.findOne = (req, res) => {
                     message: "Data Not Found"
                 })
             }
-            res.status(200).send(result)
+            res.status(200).json(result)
         }).catch((err) => {
             res.status(409).json({
                 message: err.message || "Some Error While Receiving Data"
@@ -101,7 +101,7 @@ exports.delete = (req, res) => {
     Paket.findByIdAndRemove(id, req.body)
         .then((result) => {
             if (!result) {
-                res.status(404).send({
+                res.status(404).json({
                     message: "Data Not Found"
                 })
             }
@@ -109,7 +109,7 @@ exports.delete = (req, res) => {
                 message: "Data was Deleted",
             })
         }).catch((err) => {
-            res.status(409).send({
+            res.status(409).json({
                 message: err.message || "Some Error While Deleting Data"
             })
         })
@@ -134,11 +134,11 @@ exports.recomendation = (req, res) => {
             const normalisasiNilai = _.map(paket, nilai => normalisasi(nilai, MaxMin));
             const hitungBobotPeringkat = _.map(normalisasiNilai, nilai => hitungPeringkat(nilai, criteria));
             const Rank = _.orderBy(hitungBobotPeringkat, ['total'], ['desc'])
-            res.status(200).send(_.slice(Rank, 0, 3))
+            res.status(200).json(_.slice(Rank, 0, 3))
             // console.log(MaxMin);
-            // res.send(hitungBobotPeringkat)
+            // res.json(hitungBobotPeringkat)
         }).catch((err) => {
-            res.status(500).send({
+            res.status(500).json({
                 message: err.message || "Some Error While Finding Data"
             })
         })
