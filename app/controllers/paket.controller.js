@@ -20,7 +20,7 @@ exports.create = (req, res) => {
         url: req.body.url,
         nama: req.body.nama,
         harga: req.body.harga,
-        venuetype: req.body.venuetype,
+        venueType: req.body.venueType,
         lokasi: req.body.lokasi,
         tamu: req.body.tamu,
         image: req.body.image,
@@ -44,11 +44,11 @@ exports.create = (req, res) => {
         venue: req.body.venue,
         detail: req.body.detailPaket,
     })
-
+    console.log(paket);
     paket.save(paket)
         .then((result) => {
             res.status(200).json({
-                message: "Data was Created"
+                result,
             })
         }).catch((err) => {
             res.status(500).json({

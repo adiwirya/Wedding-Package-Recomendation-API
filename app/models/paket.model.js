@@ -4,7 +4,7 @@ module.exports = (mongoose) => {
             url : String,
             nama: String,
             harga: Number,
-            venuetype: String,
+            venueType: String,
             lokasi: String,
             tamu: Number,
             image: String,
