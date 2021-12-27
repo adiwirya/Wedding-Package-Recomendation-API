@@ -118,25 +118,26 @@ exports.delete = (req, res) => {
 exports.recomendation = (req, res) => {
     const criteria = new Criteria({
         dekorasi: req.body.dekorasi,
-        makeup: req.body.makeup,
-        katering: req.body.katering,
+        bridal: req.body.bridal,
+        catering: req.body.catering,
         dokumentasi: req.body.dokumentasi,
-        entertaiment: req.body.entertaiment,
         venue: req.body.venue,
+        entertaiment: req.body.entertaiment,
         jumlahTamu: req.body.jumlahTamu,
         totalHarga: req.body.totalHarga,
+        car : req.body.car,
+        cake: req.body.cake,
+        crew: req.body.crew,
+        live : req.body.live,
     })
-
     Paket.find()
         .then((result) => {
-            const paket = result
+            const paket = _.map(result, (value) =>  createdata(value))
             const MaxMin = getMinMax(paket)
             const normalisasiNilai = _.map(paket, nilai => normalisasi(nilai, MaxMin));
             const hitungBobotPeringkat = _.map(normalisasiNilai, nilai => hitungPeringkat(nilai, criteria));
             const Rank = _.orderBy(hitungBobotPeringkat, ['total'], ['desc'])
-            res.status(200).json(_.slice(Rank, 0, 3))
-            // console.log(MaxMin);
-            // res.json(hitungBobotPeringkat)
+            res.status(200).json(_.slice(Rank, 0, 5))
         }).catch((err) => {
             res.status(500).json({
                 message: err.message || "Some Error While Finding Data"
@@ -144,25 +145,63 @@ exports.recomendation = (req, res) => {
         })
 }
 
+function createdata(data) {
+    result = {
+        id : data.id,
+        url: data.url,
+        nama: data.nama,
+        harga: data.harga,
+        totalHarga: data.harga,
+        venueType: data.venueType,
+        lokasi: data.lokasi,
+        jumlahTamu: data.tamu,
+        image: data.image,
+        katering: data.catering,
+        venue: data.venue,
+        car: data.car,
+        crew: data.crew,
+        cake: data.cake,
+        live: data.live,
+        entertaiment: (Number(data.mc) + Number(data.singer) + Number(data.ins)),
+        bridal: (Number(data.mua) + Number(data.groom) + Number(data.bride)),
+        dokumentasi: ((Number(data.photo) + Number(data.video)) * Number(data.hour)),
+        dekorasi: (Number(data.stage) + Number(data.gate) + Number(data.table)),
+        detail: data.detail,
+    }
+    // console.log(result);
+    return result;
+
+}
+
 function getMinMax(value) {
-    const dekorasiMin = _.minBy(value, 'dekorasi')
-    const makeupMin = _.minBy(value, 'makeup')
-    const kateringMin = _.minBy(value, 'katering')
-    const dokumentasiMin = _.minBy(value, 'dokumentasi')
-    const entertaimentMin = _.minBy(value, 'entertaiment')
-    const venueMin = _.minBy(value, 'venue')
+    // console.log(value);
+    const dekorasiMax = _.maxBy(value, 'dekorasi')
+    const bridalMax = _.maxBy(value, 'bridal')
+    const kateringMax = _.maxBy(value, 'katering')
+    const dokumentasiMax = _.maxBy(value, 'dokumentasi')
+    const entertaimentMax = _.maxBy(value, 'entertaiment')
+    const venueMax = _.maxBy(value, 'venue')
     const jumlahTamuMax = _.maxBy(value, 'jumlahTamu')
     const totalHargaMin = _.minBy(value, 'totalHarga')
+    const carMax = _.maxBy(value, 'car')
+    const cakeMax = _.maxBy(value, 'cake')
+    const crewMax = _.maxBy(value, 'crew')
+    const liveMax = _.maxBy(value, 'live')
+
 
     return {
-        dekorasi: dekorasiMin.dekorasi,
-        makeup: makeupMin.makeup,
-        katering: kateringMin.katering,
-        dokumentasi: dokumentasiMin.dokumentasi,
-        entertaiment: entertaimentMin.entertaiment,
-        venue: venueMin.venue,
+        dekorasi: dekorasiMax.dekorasi,
+        bridal: bridalMax.bridal,
+        katering: kateringMax.katering,
+        dokumentasi: dokumentasiMax.dokumentasi,
+        entertaiment: entertaimentMax.entertaiment,
+        venue: venueMax.venue,
         jumlahTamu: jumlahTamuMax.jumlahTamu,
         totalHarga: totalHargaMin.totalHarga,
+        car: carMax.car,
+        cake: cakeMax.cake,
+        crew: crewMax.crew,
+        live: liveMax.live,
     }
 }
 
@@ -179,8 +218,8 @@ function normalisasi(matrix, maxmin) {
         matrix.dekorasi = maxmin.dekorasi / matrix.dekorasi;
     }
 
-    if (matrix.makeup != '0') {
-        matrix.makeup = maxmin.makeup / matrix.makeup;
+    if (matrix.bridal != '0') {
+        matrix.bridal = maxmin.bridal / matrix.bridal;
     }
 
     if (matrix.katering != '0') {
@@ -199,23 +238,45 @@ function normalisasi(matrix, maxmin) {
         matrix.totalHarga = maxmin.totalHarga / matrix.totalHarga;
     }
 
+    if (matrix.car != '0') {
+        matrix.car = maxmin.car / matrix.car;
+    }
+
+    if (matrix.cake != '0') {
+        matrix.cake = maxmin.cake / matrix.cake;
+    }
+
+    if (matrix.crew != '0') {
+        matrix.crew = maxmin.crew / matrix.crew;
+    }
+
+    if (matrix.live != '0') {
+        matrix.live = maxmin.live / matrix.live;
+    }
+
     return matrix;
 }
 
 function hitungPeringkat(nilai, criteria) {
     const total =
         (nilai.dekorasi * criteria.dekorasi) +
-        (nilai.makeup * criteria.makeup) +
-        (nilai.katering * criteria.katering) +
+        (nilai.bridal * criteria.bridal) +
         (nilai.dokumentasi * criteria.dokumentasi) +
         (nilai.entertaiment * criteria.entertaiment) +
         (nilai.venue * criteria.venue) +
         (nilai.jumlahTamu * criteria.jumlahTamu) +
-        (nilai.totalHarga * criteria.totalHarga);
-    const result = {
+        (nilai.totalHarga * criteria.totalHarga) +
+        (nilai.car * criteria.car) +
+        (nilai.cake * criteria.cake) +
+        (nilai.crew * criteria.crew) +
+        (nilai.live * criteria.live) +
+        (nilai.katering * criteria.catering);
+    
+    result = {
         id: nilai.id,
-        nama: nilai.namaPaket,
+        nama: nilai.nama,
         image: nilai.image,
+        harga: nilai.harga,
         total: total,
     }
     return result;
