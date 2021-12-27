@@ -48,8 +48,8 @@ exports.create = (req, res) => {
     paket.save(paket)
         .then((result) => {
             res.status(200).json({
-                result,
-            })
+                message: "Data Created",
+                        })
         }).catch((err) => {
             res.status(500).json({
                 message: err.message || "Some Error While Creating Data"
