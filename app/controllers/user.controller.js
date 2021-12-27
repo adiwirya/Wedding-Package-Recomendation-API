@@ -116,7 +116,7 @@ exports.login = async (req, res) => {
             });
         } else {
             res.status(400).json({
-                error: "Login Failed"
+                message: "Login Failed"
             });
         }
      } else {
