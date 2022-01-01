@@ -44,11 +44,11 @@ exports.create = (req, res) => {
         venue: req.body.venue,
         detail: req.body.detail,
     })
-    console.log(paket);
     paket.save(paket)
         .then((result) => {
             res.status(200).json({
                 message: "Data Created",
+                paket : result,
                         })
         }).catch((err) => {
             res.status(500).json({
