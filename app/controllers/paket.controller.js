@@ -117,9 +117,9 @@ exports.delete = (req, res) => {
 
 exports.recomendation = (req, res) => {
     const criteria = new Criteria({
+        katering: req.body.katering,
         dekorasi: req.body.dekorasi,
         bridal: req.body.bridal,
-        catering: req.body.catering,
         dokumentasi: req.body.dokumentasi,
         venue: req.body.venue,
         entertaiment: req.body.entertaiment,
@@ -130,6 +130,8 @@ exports.recomendation = (req, res) => {
         crew: req.body.crew,
         live : req.body.live,
     })
+    console.log(req.body.katering);
+    console.log(criteria);
     Paket.find()
         .then((result) => {
             const paket = _.map(result, (value) =>  createdata(value))
@@ -137,6 +139,7 @@ exports.recomendation = (req, res) => {
             const normalisasiNilai = _.map(paket, nilai => normalisasi(nilai, MaxMin));
             const hitungBobotPeringkat = _.map(normalisasiNilai, nilai => hitungPeringkat(nilai, criteria));
             const Rank = _.orderBy(hitungBobotPeringkat, ['total'], ['desc'])
+            // console.log(normalisasiNilai);
             res.status(200).json(_.slice(Rank, 0, 5))
         }).catch((err) => {
             res.status(500).json({
@@ -207,27 +210,27 @@ function getMinMax(value) {
 
 function normalisasi(matrix, maxmin) {
     if (matrix.dokumentasi != '0') {
-        matrix.dokumentasi = maxmin.dokumentasi / matrix.dokumentasi;
+        matrix.dokumentasi = matrix.dokumentasi / matrix.dokumentasi;
     }
 
     if (matrix.entertaiment != '0') {
-        matrix.entertaiment = maxmin.entertaiment / matrix.entertaiment;
+        matrix.entertaiment = matrix.entertaiment / maxmin.entertaiment;
     }
 
     if (matrix.dekorasi != '0') {
-        matrix.dekorasi = maxmin.dekorasi / matrix.dekorasi;
+        matrix.dekorasi = matrix.dekorasi / maxmin.dekorasi;
     }
 
     if (matrix.bridal != '0') {
-        matrix.bridal = maxmin.bridal / matrix.bridal;
+        matrix.bridal = matrix.bridal / maxmin.bridal;
     }
 
     if (matrix.katering != '0') {
-        matrix.katering = maxmin.katering / matrix.katering;
+        matrix.katering = matrix.katering / maxmin.katering;
     }
 
     if (matrix.venue != '0') {
-        matrix.venue = maxmin.venue / matrix.venue;
+        matrix.venue = matrix.venue / maxmin.venue;
     }
 
     if (matrix.jumlahTamu != '0') {
@@ -239,19 +242,19 @@ function normalisasi(matrix, maxmin) {
     }
 
     if (matrix.car != '0') {
-        matrix.car = maxmin.car / matrix.car;
+        matrix.car = matrix.car / maxmin.car;
     }
 
     if (matrix.cake != '0') {
-        matrix.cake = maxmin.cake / matrix.cake;
+        matrix.cake = matrix.cake / maxmin.cake;
     }
 
     if (matrix.crew != '0') {
-        matrix.crew = maxmin.crew / matrix.crew;
+        matrix.crew = matrix.crew / maxmin.crew;
     }
 
     if (matrix.live != '0') {
-        matrix.live = maxmin.live / matrix.live;
+        matrix.live = matrix.live / maxmin.live;
     }
 
     return matrix;
@@ -270,7 +273,7 @@ function hitungPeringkat(nilai, criteria) {
         (nilai.cake * criteria.cake) +
         (nilai.crew * criteria.crew) +
         (nilai.live * criteria.live) +
-        (nilai.katering * criteria.catering);
+        (nilai.katering * criteria.katering);
     
     result = {
         id: nilai.id,

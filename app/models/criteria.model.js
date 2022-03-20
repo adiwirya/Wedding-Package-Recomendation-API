@@ -3,7 +3,7 @@ module.exports = (mongoose) => {
         {
             dekorasi: Number,
             bridal: Number,
-            catering: Number,
+            katering: Number,
             dokumentasi: Number,
             venue: Number,
             entertaiment: Number,
