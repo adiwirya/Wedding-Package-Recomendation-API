@@ -130,8 +130,8 @@ exports.recomendation = (req, res) => {
         crew: req.body.crew,
         live : req.body.live,
     })
-    console.log(req.body.katering);
-    console.log(criteria);
+    // console.log(req.body.katering);
+    // console.log(criteria);
     Paket.find()
         .then((result) => {
             const paket = _.map(result, (value) =>  createdata(value))
@@ -210,7 +210,7 @@ function getMinMax(value) {
 
 function normalisasi(matrix, maxmin) {
     if (matrix.dokumentasi != '0') {
-        matrix.dokumentasi = matrix.dokumentasi / matrix.dokumentasi;
+        matrix.dokumentasi = matrix.dokumentasi / maxmin.dokumentasi;
     }
 
     if (matrix.entertaiment != '0') {
