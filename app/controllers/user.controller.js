@@ -23,7 +23,7 @@ exports.register = async (req, res) =>  {
                 });
             }).catch((err) => {
                 res.status(500).json({
-                    message: err.message || "TRerjadi Kesalahan"
+                    message: err.message || "Terjadi Kesalahan"
                 });
             });
     } else {
