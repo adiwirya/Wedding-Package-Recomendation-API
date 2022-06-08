@@ -16,20 +16,19 @@ exports.register = async (req, res) =>  {
         email: req.body.email
     })
     if (!duplicate) {
-        console.log("not duplicate");
         user.save(user)
             .then((result) => {
                 res.status(200).json({
-                    message: "User Created Successfully"
+                    message: "User Berhasil Dibuat"
                 });
             }).catch((err) => {
                 res.status(500).json({
-                    message: err.message || "Some error occurred while creating the User."
+                    message: err.message || "TRerjadi Kesalahan"
                 });
             });
     } else {
         res.status(409).json({
-            message: "User already exist"
+            message: "User Sudah terdaftar"
         });
 
     }
@@ -50,22 +49,22 @@ exports.login = async (req, res) => {
         
         if (validPassword) {
             res.status(200).json({
-                message: "Login Successfully"
+                message: "Login Berhasil"
             });
         } else {
             res.status(400).json({
-                message: "Login Failed"
+                message: "Login Gagal"
             });
         }
      } else {
         res.status(409).json({
-            message: "User does not exist"
+            message: "User Tidak Ditemukan"
         });
 
     }
     } catch (error) {
         res.status(500).json({
-            message: error.message || "Some error occurred while creating the User."
+            message: error.message || "Terjadi Kesalahan"
         });
     }
 };

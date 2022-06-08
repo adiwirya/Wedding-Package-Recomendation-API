@@ -10,7 +10,7 @@ exports.findAll = (req, res) => {
             res.status(200).json(result)
         }).catch((err) => {
             res.status(500).json({
-                message: err.message || "Some Error While Finding Data"
+                message: err.message || "Terjadi Kesalahan"
             })
         })
 }
@@ -47,12 +47,12 @@ exports.create = (req, res) => {
     paket.save(paket)
         .then((result) => {
             res.status(200).json({
-                message: "Data Created",
+                message: "Data Telah Ditambahkan",
                 paket : result,
                         })
         }).catch((err) => {
             res.status(500).json({
-                message: err.message || "Some Error While Creating Data"
+                message: err.message || "Terjadi Kesalahan"
             })
         })
 }
@@ -64,13 +64,13 @@ exports.findOne = (req, res) => {
         .then((result) => {
             if (!result) {
                 res.status(404).json({
-                    message: "Data Not Found"
+                    message: "Data Tidak Ditemukan"
                 })
             }
             res.status(200).json(result)
         }).catch((err) => {
             res.status(409).json({
-                message: err.message || "Some Error While Receiving Data"
+                message: err.message || "Terjadi Kesalahan"
             })
         })
 }
@@ -82,15 +82,15 @@ exports.update = (req, res) => {
         .then((result) => {
             if (!result) {
                 res.status(404).json({
-                    message: "Data Not Found"
+                    message: "Data Tidak Ditemukan"
                 })
             }
             res.status(200).json({
-                message: "Data Updated",
+                message: "Data Telah Diupdate",
             })
         }).catch((err) => {
             res.status(409).json({
-                message: err.message || "Some Error While Updating Data"
+                message: err.message || "Terjadi Kesalahan"
             })
         })
 }
@@ -102,15 +102,15 @@ exports.delete = (req, res) => {
         .then((result) => {
             if (!result) {
                 res.status(404).json({
-                    message: "Data Not Found"
+                    message: "Data Tidak Ditemukan"
                 })
             }
             res.status(200).json({
-                message: "Data was Deleted",
+                message: "Data Telah Dihapus",
             })
         }).catch((err) => {
             res.status(409).json({
-                message: err.message || "Some Error While Deleting Data"
+                message: err.message || "Terjadi Kesalahan"
             })
         })
 }
@@ -130,8 +130,7 @@ exports.recomendation = (req, res) => {
         crew: req.body.crew,
         live : req.body.live,
     })
-    // console.log(req.body.katering);
-    // console.log(criteria);
+
     Paket.find()
         .then((result) => {
             const paket = _.map(result, (value) =>  createdata(value))
@@ -139,11 +138,10 @@ exports.recomendation = (req, res) => {
             const normalisasiNilai = _.map(paket, nilai => normalisasi(nilai, MaxMin));
             const hitungBobotPeringkat = _.map(normalisasiNilai, nilai => hitungPeringkat(nilai, criteria));
             const Rank = _.orderBy(hitungBobotPeringkat, ['total'], ['desc'])
-            // console.log(normalisasiNilai);
             res.status(200).json(_.slice(Rank, 0, 5))
         }).catch((err) => {
             res.status(500).json({
-                message: err.message || "Some Error While Finding Data"
+                message: err.message || "Terjadi Kesalahan"
             })
         })
 }
